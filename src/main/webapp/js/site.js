@@ -53,7 +53,7 @@ var addMarker = function(map, lat, lng, title, pic, pinColor) {
     });
 
     google.maps.event.addListener(marker, 'click', function() {
-        map.setZoom(4);
+        map.setZoom(10);
         map.setCenter(marker.getPosition());
     });
 };
@@ -65,10 +65,23 @@ var initYear = function() {
 
 var init = function() {
     initYear();
-    var myOptions = {
-        zoom: 2,
-        center: new google.maps.LatLng(0, 0),
-        mapTypeId: google.maps.MapTypeId.SATELLITE
-    };
-    return new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+    $.getJSON('/api/friends', function(data) {
+        var myOptions = {
+            zoom: 2,
+            center: new google.maps.LatLng(0, 0),
+            mapTypeId: google.maps.MapTypeId.SATELLITE
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+        google.maps.event.addListenerOnce(map, 'idle', function() {
+            $.each(data, function(index, friend) {
+                addMarker(map, friend.location.latitude, friend.location.longitude, friend.name, friend.pictureUrl, friend.location.countryColorCode);
+                $.each(friend.friendsLocations, function(idx, location) {
+                    addArc(map, friend.location.latitude, friend.location.longitude, location.latitude, location.longitude, friend.location.countryColorCode);
+                });
+            });
+        });
+
+    });
 };

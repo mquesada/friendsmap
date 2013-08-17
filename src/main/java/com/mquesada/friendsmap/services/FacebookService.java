@@ -4,7 +4,6 @@ import com.mquesada.friendsmap.model.Location;
 import com.mquesada.friendsmap.model.Profile;
 import com.mquesada.friendsmap.util.CountryColorHelper;
 import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.api.FqlResult;
 import org.springframework.social.facebook.api.FqlResultMapper;
 
@@ -13,7 +12,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -40,7 +38,7 @@ public class FacebookService {
     private String getMutualFriendsQuery(List<Profile> friends, int start, int end) {
         StringBuilder query = new StringBuilder("SELECT uid1, uid2 FROM friend WHERE uid1 IN (SELECT uid2 FROM friend WHERE uid1=me()) AND uid2 IN (");
         for (int i = start; i < end; i++) {
-            query.append("'").append(friends.get(i).getFacebookProfile().getId()).append("'");
+            query.append("'").append(friends.get(i).getId()).append("'");
             if (i < end - 1) {
                 query.append(", ");
             }
@@ -59,14 +57,16 @@ public class FacebookService {
             @Override
             public Profile mapObject(FqlResult result) {
                 Profile profile = new Profile();
+                profile.setId(result.getString("uid"));
+                profile.setName(result.getString("name"));
+                profile.setFirstName(result.getString("first_name"));
+                profile.setLastName(result.getString("last_name"));
+                profile.setPictureUrl(result.getString("pic_square"));
+                profile.setProfileUrl(result.getString("profile_url"));
                 profile.setLocation(getLocation(result, "current_location"));
                 if (profile.getLocation() == null) {
                     profile.setLocation(getLocation(result, "hometown_location"));
                 }
-                FacebookProfile facebookProfile = new FacebookProfile(result.getString("uid"), result.getString("username"), result.getString("name"), result.getString("first_name"), result.getString("last_name"), result.getString("sex"), new Locale(result.getString("locale")));
-                profile.setFacebookProfile(facebookProfile);
-                profile.setPictureUrl(result.getString("pic_square"));
-                profile.setProfileUrl(result.getString("profile_url"));
                 return profile;
             }
         });
@@ -75,7 +75,7 @@ public class FacebookService {
         Map<String, Profile> friendProfiles = new HashMap<String, Profile>(results.size(), 1);
         for (Profile profile : results) {
             if (profile.getLocation() != null) {
-                friendProfiles.put(profile.getFacebookProfile().getId(), profile);
+                friendProfiles.put(profile.getId(), profile);
             }
         }
 

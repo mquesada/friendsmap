@@ -11,7 +11,7 @@
         <div id="logo">Friends Map</div>
         <div id="menu">
             <ul>
-                <li><div id="pic"><a href="http://www.facebook.com/${user.facebookProfile.username}" target="_blank"><div id="userPic"></div></a></div></li>
+                <li><div id="pic"><a href="http://www.facebook.com/${user.username}" target="_blank"><div id="userPic"></div></a></div></li>
                 <li><div id="logout"><a href="<c:url value="/signout" />">Log Out</a></div></li>
             </ul>
         </div>
@@ -19,34 +19,23 @@
 </header>
 <div class="clear">&nbsp;</div>
 <section id="main">
-    <div id="map_canvas"></div>
+    <div id="map_canvas">
+        <div id="loading_outer">
+            <div id="loading">
+                <img src="../../images/ajax-loader.gif" alt="Loading map"/>
+                <p>Please wait while we load your map ...</p>
+            </div>
+        </div>
+    </div>
 </section>
 <div class="clear">&nbsp;</div>
 <footer>
     <jsp:include page="footer.jsp"></jsp:include>
 </footer>
 <script type="text/javascript">
-    function initPage() {
-        $("#userPic").css('background-image', 'url(http://graph.facebook.com/<c:out value="${user.facebookProfile.id}"/>/picture)');
-        var map = init();
-    <c:forEach items="${friends}" var="friend">
-    <c:if test="${not empty friend.location}">
-        addMarker(map, <c:out value="${friend.location.latitude}"/>, <c:out value="${friend.location.longitude}"/>, "<c:out value="${friend.facebookProfile.name}"/>", "<c:out value="${friend.pictureUrl}"/>", "<c:out value="${friend.location.countryColorCode}"/>");
-    </c:if>
-    </c:forEach>
-    <c:forEach items="${friends}" var="friend">
-    <c:if test="${not empty friend.location}">
-    <c:forEach items="${friend.friends}" var="mutualFriend">
-    <c:if test="${not empty mutualFriend.location}">
-        addArc(map, <c:out value="${friend.location.latitude}"/>, <c:out value="${friend.location.longitude}"/>, <c:out value="${mutualFriend.location.latitude}"/>, <c:out value="${mutualFriend.location.longitude}"/>, "<c:out value="${friend.location.countryColorCode}"/>");
-    </c:if>
-    </c:forEach>
-    </c:if>
-    </c:forEach>
-    }
-
     $(window).load(function() {
-        initPage();
+        $("#userPic").css('background-image', 'url(http://graph.facebook.com/<c:out value="${user.id}"/>/picture)');
+        init();
     });
 
 </script>
