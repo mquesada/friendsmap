@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>Facebook Friends Map Sign In</title>
+    <title>Facebook Friends Map</title>
     <jsp:include page="header.jsp"></jsp:include>
 </head>
 <body>

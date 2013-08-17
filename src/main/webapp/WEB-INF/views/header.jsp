@@ -21,6 +21,6 @@
 <script type="text/javascript"
         src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox_packed.js"></script>
 
-<script type="text/javascript">var switchTo5x = false;</script>
+<script type="text/javascript">var switchTo5x = true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher:'b8af712d-fde1-45f8-948b-6e5b740cc0d5'});</script>
+<script type="text/javascript">stLight.options({publisher: "353985c7-fb1e-45b2-a213-394b3d5a3cd3", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
