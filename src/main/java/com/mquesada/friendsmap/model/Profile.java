@@ -7,8 +7,6 @@ public class Profile {
 
     private String id;
     private String name;
-    private String firstName;
-    private String lastName;
     private String pictureUrl;
     private String profileUrl;
     private Location location;
@@ -25,28 +23,12 @@ public class Profile {
         this.name = name;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Location getLocation() {

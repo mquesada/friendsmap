@@ -41,11 +41,11 @@
 </form>
 <script type="text/javascript">
     $(window).load(function() {
+        initYear();
         $("#signInLink").click(function() {
             $("#signInForm").submit();
         });
     });
-    initYear();
 </script>
 </body>
 </html>

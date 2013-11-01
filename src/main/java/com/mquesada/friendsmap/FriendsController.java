@@ -49,8 +49,6 @@ public class FriendsController {
         public Friend(Profile profile) {
             this.setId(profile.getId());
             this.setName(profile.getName());
-            this.setFirstName(profile.getFirstName());
-            this.setLastName(profile.getLastName());
             this.setPictureUrl(profile.getPictureUrl());
             this.setProfileUrl(profile.getProfileUrl());
             this.setLocation(profile.getLocation());

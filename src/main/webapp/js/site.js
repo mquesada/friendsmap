@@ -12,7 +12,7 @@ var addArc = function(map, latOrigin, lngOrigin, latDest, lngDest, color) {
     connection.setMap(map);
 };
 
-var addMarker = function(map, lat, lng, title, pic, pinColor) {
+var addMarker = function(map, lat, lng, title, pic, url, pinColor) {
     var pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_icon&chld=star|" + pinColor,
         new google.maps.Size(21, 34),
         new google.maps.Point(0, 0),
@@ -55,6 +55,7 @@ var addMarker = function(map, lat, lng, title, pic, pinColor) {
     google.maps.event.addListener(marker, 'click', function() {
         map.setZoom(10);
         map.setCenter(marker.getPosition());
+        window.open(url, '_blank');
     });
 };
 
@@ -70,18 +71,34 @@ var init = function() {
         var myOptions = {
             zoom: 2,
             center: new google.maps.LatLng(0, 0),
-            mapTypeId: google.maps.MapTypeId.SATELLITE
+            mapTypeId: google.maps.MapTypeId.ROADMAP
         };
         var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
-        google.maps.event.addListenerOnce(map, 'idle', function() {
-            $.each(data, function(index, friend) {
-                addMarker(map, friend.location.latitude, friend.location.longitude, friend.name, friend.pictureUrl, friend.location.countryColorCode);
-                $.each(friend.friendsLocations, function(idx, location) {
-                    addArc(map, friend.location.latitude, friend.location.longitude, location.latitude, location.longitude, friend.location.countryColorCode);
-                });
-            });
-        });
 
+        google.maps.event.addListenerOnce(map, 'idle', function() {
+            var count = 0;
+            $.each(data, function(index, friend) {
+                if (friend.location && friend.location != null) {
+                    addMarker(map, friend.location.latitude, friend.location.longitude, friend.name, friend.pictureUrl, friend.profileUrl, friend.location.countryColorCode);
+                    $.each(friend.friendsLocations, function(idx, location) {
+                        addArc(map, friend.location.latitude, friend.location.longitude, location.latitude, location.longitude, friend.location.countryColorCode);
+                    });
+                } else {
+                    var tr = $("<tr></tr>").appendTo($('#friendsNotLocated > tbody')).click(function(){
+                        window.open(friend.profileUrl, "_blank");
+                    });
+                    var tdPic = $("<td></td>").appendTo(tr);
+                    var tdName = $("<td></td>").appendTo(tr);
+                    var div = $("<div></div>").css('background-image', 'url(' + friend.pictureUrl + ')').appendTo(tdPic);
+                    $("<a>").attr("href", friend.profileUrl).attr("target", "_blank").html(friend.name).appendTo($("<span></span>").appendTo(tdName));
+                    count++;
+                }
+            });
+            if (count > 0) {
+                $("#notlocateda").html(count + " Friends not located");
+                $("#notlocated").show();
+            }
+        });
     });
 };

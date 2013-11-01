@@ -30,9 +30,10 @@ public class FacebookService {
 
     /**
      * Builds a query string to get the mutual friends between the current user and a group of his/her friends.
+     *
      * @param friends The list of the user's friends.
-     * @param start The index of the first friend
-     * @param end The index of the last friend
+     * @param start   The index of the first friend
+     * @param end     The index of the last friend
      * @return A String object with the query
      */
     private String getMutualFriendsQuery(List<Profile> friends, int start, int end) {
@@ -50,17 +51,16 @@ public class FacebookService {
 
     /**
      * Gets the information of the current user's friends.
+     *
      * @return A list of Profile objects that represent the current user's friends.
      */
     public List<Profile> getFriendsData() {
-        List<Profile> results = facebook.fqlOperations().query("SELECT uid, username, name, first_name, last_name, sex, locale, current_location, hometown_location, pic_square, profile_url FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = me())", new FqlResultMapper<Profile>() {
+        List<Profile> results = facebook.fqlOperations().query("SELECT uid, username, name, locale, current_location, hometown_location, pic_square, profile_url FROM user WHERE uid in (SELECT uid2 FROM friend WHERE uid1 = me())", new FqlResultMapper<Profile>() {
             @Override
             public Profile mapObject(FqlResult result) {
                 Profile profile = new Profile();
                 profile.setId(result.getString("uid"));
                 profile.setName(result.getString("name"));
-                profile.setFirstName(result.getString("first_name"));
-                profile.setLastName(result.getString("last_name"));
                 profile.setPictureUrl(result.getString("pic_square"));
                 profile.setProfileUrl(result.getString("profile_url"));
                 profile.setLocation(getLocation(result, "current_location"));
@@ -71,11 +71,15 @@ public class FacebookService {
             }
         });
 
+        // Keep a list of the friends who doesn't have the location set up
+        List<Profile> friendsNotLocated = new ArrayList<Profile>();
         // Creates a map with the list of friends so they can be easily found by id.
         Map<String, Profile> friendProfiles = new HashMap<String, Profile>(results.size(), 1);
         for (Profile profile : results) {
             if (profile.getLocation() != null) {
                 friendProfiles.put(profile.getId(), profile);
+            } else {
+                friendsNotLocated.add(profile);
             }
         }
 
@@ -111,12 +115,14 @@ public class FacebookService {
                 end = friends.size();
             }
         }
+        friends.addAll(friendsNotLocated);
         return friends;
     }
 
     /**
      * Gets the location information from a FQL result object.
-     * @param result The FQL result object.
+     *
+     * @param result       The FQL result object.
      * @param locationName The location name which can be 'current_location' or 'hometown_location'
      * @return Returns a Location object
      */

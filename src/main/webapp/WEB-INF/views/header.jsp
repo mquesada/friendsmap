@@ -6,16 +6,16 @@
 <meta name="description" content="See your Facebook friends in a map!"/>
 <meta name="keywords" content="java, javascript, facebook, friends, maricelquesada"/>
 
-
 <link rel="icon" href="../../images/favicon.ico" type="image/x-icon"/>
 
+<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css"/>
 <link rel="stylesheet" type="text/css" href="../../stylesheets/main.css"/>
 <link href='http://fonts.googleapis.com/css?family=Playball' rel='stylesheet' type='text/css'>
 
 <script type="text/javascript" src="../../js/site.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript"
-        src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
 <script type="text/javascript"
         src="http://maps.google.com/maps/api/js?key=<c:out value="${mapKey}"/>&sensor=false"></script>
 <script type="text/javascript"
